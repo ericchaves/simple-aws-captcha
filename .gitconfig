@@ -1,0 +1,5 @@
+[filter "no-credentials"]
+    clean = "sed -r 's|arn:aws:iam::[a-zA-Z0-9]+:|arn:aws:iam::FIXME:|' \
+            | sed -r 's|:aws-profile\\s+\"[a-zA-Z0-9]+\"|:aws-profile \"default\"|'"
+    smudge = cat
+    required = true
