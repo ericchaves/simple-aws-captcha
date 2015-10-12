@@ -8,7 +8,10 @@
   :plugins [[lein-cljsbuild "1.0.6"]
             [lein-npm "0.5.0"]
             [io.nervous/lein-cljs-lambda "0.2.4"]]
-  :node-dependencies [[source-map-support "0.2.8"]]
+  :node-dependencies [[source-map-support "0.2.8"]
+                      [gm "1.9.0"]]
+  :profiles
+  { :dev { :plugins [[org.bodil/lein-noderepl "0.1.11"]] }}
   :source-paths ["src"]
   :cljs-lambda
   {:cljs-build-id "simple-aws-captcha"
@@ -16,7 +19,8 @@
    :defaults {:role "arn:aws:iam::FIXME:role/cljs-lambda-default", :create true}
    :functions
    [{:name   "simple-captcha"
-     :invoke simple-aws-captcha.core/simple-captcha}]}
+     :invoke simple-aws-captcha.core/get-captcha
+     :description "create captcha and store it on memcached returning its image"}]}
   :cljsbuild
   {:builds [{:id "simple-aws-captcha"
              :source-paths ["src"]

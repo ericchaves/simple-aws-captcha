@@ -2,8 +2,11 @@
   (:require [cljs-lambda.util :refer [async-lambda-fn]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
-(def ^:export simple-captcha
+(defn get-code [x]
+  (take x (shuffle (seq "abcdefghijklmnopqrstuvwxyz0123456789"))))
+
+(def ^:export get-captcha
   (async-lambda-fn
    (fn [{:keys [variety]} context]
      (go
-       (js/Error (str "Sorry, I don't yet know how to work: '" variety "' magic"))))))
+       (hash-map :code (get-code 4))))))
