@@ -1,17 +1,19 @@
 (ns simple-aws-captcha.core
   (:require [cljs-lambda.util :refer [async-lambda-fn]]
             [cljs.nodejs :as node]
-            [cljs.core.async :as async])
+            [cljs.core.async :refer [>! <! chan put! take! timeout close!]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
+(enable-console-print!)
+
 (defn exec [cmd]
-  (let [ch (async/chan)
-        ps (node/require "child_process")]
-    (.exec ps cmd (fn [err stdout]
-                    (if (nil? err)
-                      (async/put! ch stdout)
-                      (async/put! ch "error")
-                      )))
+  (let [ps (node/require "child_process")
+        ch (chan)]
+    (.exec ps "ls -al"
+           (fn [err out]
+             (if (nil? err)
+               (>! ch out)
+               (>! ch "error"))))
     ch))
 
 (defn get-code

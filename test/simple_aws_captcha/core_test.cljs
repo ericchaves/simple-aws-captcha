@@ -34,9 +34,10 @@
 
 (deftest call-convert-with-exec
   (testing "trying to exec a simple cmd command"
-    (let [ch (exec "ls -al /tmp")]
+    (let [ch (exec "ls -al")]
       (print "so far so good")
       (go
-       (<! ch)
-       (print "end of go block")))))
-
+        (print "from inside a go block")
+        (print (<! ch))
+        (print "end of go block"))
+      (print "end of test"))))
